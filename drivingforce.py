@@ -93,6 +93,7 @@ for i in range (len(t_array)):
         
         Psi_j_array.append(Psi_j) 
         
+    #comlex_amplitude calculation    
         phi = np.random.uniform(0, 2 * math.pi)
 
         cos_phi = math.cos(phi)
@@ -108,7 +109,7 @@ for i in range (len(t_array)):
         epsilon = np.random.exponential (mu, E_lin)
 
         
-        # for i in range(len(epsilon)):
+        
         Ij = 2 *(epsilon/Eavg)         
       
 
@@ -116,16 +117,11 @@ for i in range (len(t_array)):
 
         cj_imag = Ij * plm_cos_theta * sin_phi 
         
-        # class rndmforce:
-            
-        #     def random_force_j(t2_array[j], amp_real, amp_imag)
-            
-        random_force_j = {"time_impulse" :t2_array[j],"real": cj_real,"imag" : cj_imag}
-         
+        #random_force_j = {"time_impulse" :t2_array[j],"real": cj_real,"imag" : cj_imag}
+        random_force_j = [t2_array[j], cj_real, cj_imag]
         random_force.append(random_force_j)
-    
+        #print(random_force)
         Sum = Sum + Psi_j
-    
     sum_array.append(Sum)
     
 #Complex amplitude    
