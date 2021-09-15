@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 
 import math
 
-from drivingforce import timediff, Taucorr, Psi_j, t2_array
+from drivingforce import Taucorr, t2_array, f
 
 from drivingforce import random_force
 
@@ -23,7 +23,7 @@ from drivingforce import random_force
 
 
 # function that returns dqdt_real and dqdt_imag
-def dQ_dt(q, tvalues, om, gam):
+def dQ_dt(q, t, om, gam):
     
     q_real = q[0]
     
@@ -58,36 +58,45 @@ def dQ_dt(q, tvalues, om, gam):
         # time_impulse =[]
         
         # diff = np.asarray(t) - np.asarray(tj)
+        time_impulses = random_force[j][0]
+        
+        timediff = t - time_impulses
         
         if abs(timediff) > (10*Taucorr) :
             
           continue;  
         # for i in range (len(random_force[j])):  
 
-        time_impulses = random_force[j][0] #first column passed as time_impulses
+        # time_impulses = random_force[j][0] #first column passed as time_impulses
         
         # print(time_impulses)
         
         cj_real = random_force[j][1]  #second column passed as cj_real
         # print(cj_real)
         cj_imag = random_force[j][2]   #third column passed as cj_imag
+        
           
         psi_j = math.exp(-(timediff)**2/(2*Taucorr**2))
+        
+       
         
         force_real += (cj_real * psi_j)
         
         force_imag += (cj_imag * psi_j)
         
-    
+        # print(cj_real, cj_imag, psi_j, force_real, force_imag)
     
     # time_impulses.append(time_impulse)
     
     
    
-    
+      
     dqdt_real += -(om * force_imag)
     
     dqdt_imag += (om * force_real )
+    
+    
+    
     
   
     equation = (dqdt_real, dqdt_imag)
@@ -123,9 +132,9 @@ Qvalues_imag = Qvalues[:,1]
 
 
 # plot results
-plt.plot(tvalues, Qvalues_real ,'r-',linewidth=2)
+plt.plot(tvalues, Qvalues_real ,'g--',linewidth=2, label="Real values of q")
 
-plt.plot (tvalues, Qvalues_imag, 'b', linewidth=2)
+plt.plot (tvalues, Qvalues_imag, 'b--', linewidth=2, label = "Imaginary values of q")
 
 plt.xlabel('time')
 plt.ylabel('q(t)')
