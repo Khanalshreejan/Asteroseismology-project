@@ -11,6 +11,10 @@ import matplotlib.pyplot as plt
 
 import math
 
+import sys
+
+from scipy.interpolate import interp1d
+
 omega= 1
 
 mu = (50*omega)/(2*math.pi) #10 impulses per oscillation period
@@ -28,7 +32,7 @@ t2_array =[0]
 # t_end = 30* ((2*math.pi)/omega)
 
 
-delt = np.random.exponential(inv_mu,500)
+delt = np.random.exponential(inv_mu,200)
 
 t1 = 0
 
@@ -77,7 +81,7 @@ Psi_j=0
 
 Taucorr = (1/omega)
 
-t_array= np.linspace(0, t_end, 1000)
+t_array= np.linspace(0, t_end, 50)
 
 random_force =[]
 for i in range (len(t_array)):
@@ -104,11 +108,14 @@ for i in range (len(t_array)):
 
         plm_cos_theta = cos_theta
 
-        Eavg = E_lin = 1
-
-        epsilon = np.random.exponential (mu, E_lin)
+        E_lin = 1
+        
+        Eavg = E_lin
+        
+        epsilon = np.random.exponential (Eavg)
 
         
+        # print(epsilon)
         
         Ij = 2 *(epsilon/Eavg)         
       
@@ -119,21 +126,41 @@ for i in range (len(t_array)):
         
         #random_force_j = {"time_impulse" :t2_array[j],"real": cj_real,"imag" : cj_imag}
         random_force_j = [t2_array[j], cj_real, cj_imag]
+        
+        # print (t2_array[j], cj_real, cj_imag)
+        # print (Ij, plm_cos_theta, cos_phi, sin_phi)
+        # sys.exit()
         random_force.append(random_force_j)
+        
         #print(random_force)
         Sum = Sum + Psi_j
+        
+
+        
     sum_array.append(Sum)
     
+    # f= interp1d(t_array, sum_array, kind='linear')
+    
+t_array_new = np.linspace(0, t_end,1000)
+    
+    
 #Complex amplitude    
+for kind in [ 'linear']:
+    
+    f= interp1d(t_array, sum_array, kind=kind)   
+
+# print(np.array(t_array).shape, np.array(sum_array).shape) 
 
      
-        
     # sum_array[i] = Psi_j_array[j] + sum_array[i]
         
     # sum_array.append(Sum)    
 
-plt.plot(t_array, sum_array, 'r-', linewidth =1)   
+# plt.plot(t_array, sum_array, 'r.', linewidth =0.2)   
+plt.plot(t_array, sum_array, 'g.', t_array_new, f(t_array_new), 'r-', linewidth=1)
+
 plt.xlabel('linearly spaced time')
+
 plt.ylabel('Driven force') 
 # plt.plot(impulse_index, t2_array, 'b.', markersize=0.5)
 plt.show()
